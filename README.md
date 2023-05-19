@@ -12,7 +12,7 @@ Przed uruchomieniem aplikacji, musisz mieć zainstalowane następujące elementy
 
 - Python (wersja 3.10)
 - Flask (wersja 2.3.2)
-- Bootstrap (wersja 5.1)
+- Bootstrap (wersja 3.3.7.1)
 
 ## Instalacja
 
