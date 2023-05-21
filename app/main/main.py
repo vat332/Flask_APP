@@ -15,7 +15,7 @@ def about():
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html.html')
 
 
 if __name__ == '__main__':
