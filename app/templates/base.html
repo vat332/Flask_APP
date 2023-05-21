@@ -1,0 +1,16 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}To-DoList app{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="filetext/css">
+{% endblock %}
+
+{% block content %}
+{% include 'components/navbar.html' %}
+<div class="container">
+    {% block page_content %}{% endblock %}
+</div>
+{% include 'components/footer.html' %}
+{% endblock %}
+
