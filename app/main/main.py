@@ -1,13 +1,44 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, DateField
+from wtforms.validators import DataRequired, Optional
 
 app = Flask(__name__, template_folder='../templates')
+app.config['SECRET_KEY'] = 'd52326c7d845b4b41e4872ae2de9b66b'
 bootstrap = Bootstrap(app)
 
 
-@app.route('/')
+class ArtistFrom(FlaskForm):
+    name = StringField('Podaj imię artysty:', validators=[DataRequired()])
+    surname = StringField('Podaj nazwisko artysty:', validators=[DataRequired()])
+    birth_date = DateField('Data urodzeniao artysty:', validators=[DataRequired()])
+    nickname = StringField('Podaj ksywkę artysty:', validators=[Optional()])
+    localization = StringField('Skąd pochodzi:', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    name = None
+    surname = None
+    birth_date = None
+    nickname = None
+    localization = None
+
+    form = ArtistFrom()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            name = form.name.data
+            surname = form.surname.data
+            birth_date = form.birth_date.data
+            nickname = form.nickname.data
+            localization = form.localization.data
+            form.name.data = ''
+            flash('Twoja wiadomość została wysłana!', 'success')
+            return redirect(url_for('home'))
+    return render_template('home.html', form=form, name=name, surname=surname, birth_date=birth_date, nickname=nickname,
+                           localization=localization)
 
 
 @app.route('/about')
