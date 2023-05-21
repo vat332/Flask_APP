@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% block title %}To-Do application{% endblock %}
 {% block page_content %}
+{% include 'components/success_flash.html' %}
 <div class="container">
     <div class="page-header">
         <h1>
@@ -8,6 +10,7 @@
         </h1>
         <button class="btn btn-danger">Hello</button>
     </div>
+    {{ wtf.quick_form(form) }}
 </div>
 
 {% endblock %}
