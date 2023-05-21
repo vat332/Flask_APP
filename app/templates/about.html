@@ -1,3 +1,13 @@
-<h1>
-    To sa informacje o projekcie
-</h1>
+{% extends "bootstrap/base.html" %}
+{% block title %}To-Do application{% endblock %}
+{% block content %}
+{% include 'components/navbar.html' %}
+<div class="container">
+    <div class="page-header">
+        <h1>
+            To jest strona z opisem aplikacji
+        </h1>
+    </div>
+</div>
+{% include 'components/footer.html' %}
+{% endblock %}
