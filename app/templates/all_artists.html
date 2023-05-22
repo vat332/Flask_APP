@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}To-Do application{% endblock %}
+{% block page_content %}
+<div class="container">
+    <div class="page-header">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Ksywka</th>
+                <th>Pochodzenie</th>
+                <th>Zdjęcie</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for artist in artists %}
+            <tr>
+                <td>{{ artist.id }}</td>
+                <td>{{ artist.name }}</td>
+                <td>{{ artist.surname }}</td>
+                <td>{{ artist.nickname }}</td>
+                {% if artist.photo %}
+                <td><img src="../static/images/{{ artist.photo }}" height="50" width="50"></td>
+                {% else %}
+                <td>No Image</td>
+                {% endif %}
+                <td>{{ artist.localization }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
