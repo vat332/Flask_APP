@@ -17,7 +17,7 @@ build/
 .idea/
 docs/_build/
 .vscode
-
+app/static/images
 # Coverage reports
 htmlcov/
 .coverage
