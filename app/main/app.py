@@ -125,8 +125,13 @@ class AlbumForm(FlaskForm):
         self.artist_id.choices = [(a.id, f"{a.nickname} ({a.name} {a.surname})") for a in Artist.query.all()]
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
+    return render_template('home.html')
+
+
+@app.route('/artist_add', methods=['GET', 'POST'])
+def add_artist():
     form = ArtistForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -142,7 +147,7 @@ def home():
             return redirect(url_for('home'))
         else:
             flash('Oops coś poszło nie tak. Spróbuj ponownie!', 'danger')
-    return render_template('home.html', form=form)
+    return render_template('artist_add.html', form=form)
 
 
 @app.route('/album_add', methods=['GET', 'POST'])
