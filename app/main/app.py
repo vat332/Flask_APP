@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateField, FileField
+from wtforms import StringField, SubmitField, DateField, FileField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Optional
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -44,23 +44,60 @@ class Artist(db.Model):
     def allowed_file(filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-    class Role(db.Model):
-        __tablename__ = 'roles'
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(64), unique=True)
-        users = db.relationship('User', backref='role', lazy='dynamic')
 
-        def __repr__(self):
-            return '<Role %r>' % self.name
-
-    class User(db.Model):
-        __tablename__ = 'users'
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(64), unique=True, index=True)
-        role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __repr__(self):
         return '<Role %r>' % self.name
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
+
+
+class Song(db.Model):
+    __tablename__ = 'songs'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    duration = db.Column(db.String(100), nullable=False)
+    release_date = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    photo = db.Column(db.String(100), nullable=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
+
+    artist = db.relationship('Artist', backref=db.backref('songs', lazy='dynamic'))
+
+    def __repr__(self):
+        return '<Piosenka %r>' % self.name
+
+
+class Album(db.Model):
+    __tablename__ = 'albums'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    release_date = db.Column(db.Date)
+    photo = db.Column(db.String(100), nullable=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
+    songs = db.relationship('Song', secondary='album_songs', backref=db.backref('albums', lazy=True))
+
+    def __repr__(self):
+        return '<Album %r>' % self.name
+
+    album_songs = db.Table('album_songs',
+                           db.Column('album_id', db.Integer, db.ForeignKey('albums.id'), primary_key=True),
+                           db.Column('song_id', db.Integer, db.ForeignKey('songs.id'), primary_key=True)
+                           )
 
 
 class ArtistForm(FlaskForm):
@@ -72,6 +109,20 @@ class ArtistForm(FlaskForm):
     photo = FileField('Zdjęcie',
                       validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png', "'gif"], 'Tylko obrazki!')])
     submit = SubmitField('Dodaj')
+
+
+class AlbumForm(FlaskForm):
+    name = StringField('Nazwa płyty', validators=[DataRequired()])
+    description = TextAreaField('Opis płyty')
+    release_date = DateField('Data wydania płyty')
+    photo = FileField('Zdjęcie',
+                      validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png', "'gif"], 'Tylko obrazki!')])
+    artist_id = SelectField('Wykonawca', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('Utwórz')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.artist_id.choices = [(a.id, f"{a.nickname} ({a.name} {a.surname})") for a in Artist.query.all()]
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -94,6 +145,26 @@ def home():
     return render_template('home.html', form=form)
 
 
+@app.route('/album_add', methods=['GET', 'POST'])
+def add_album():
+    form = AlbumForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            album = Album(name=form.name.data, description=form.description.data, release_date=form.release_date.data,
+                          artist_id=form.artist_id.data)
+            if form.photo.data:
+                filename = secure_filename(form.photo.data.filename)
+                form.photo.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                album.photo = filename
+            db.session.add(album)
+            db.session.commit()
+            flash('Album został dodany!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Oops coś poszło nie tak. Spróbuj ponownie!', 'danger')
+    return render_template('album_add.html', form=form)
+
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -107,7 +178,13 @@ def contact():
 @app.route('/artists_all')
 def artists_all():
     artists = Artist.query.all()
-    return render_template('all_artists.html', artists=artists)
+    return render_template('artists_all.html', artists=artists)
+
+
+@app.route('/albums_all')
+def albums_all():
+    albums = Album.query.all()
+    return render_template('albums_all.html', albums=albums)
 
 
 @app.errorhandler(404)

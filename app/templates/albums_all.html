@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}To-Do application{% endblock %}
+{% block page_content %}
+<div class="container">
+    <div class="page-header">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa płyty</th>
+                <th>Data wydania</th>
+                <th>Artysta</th>
+                <th>Opis</th>
+                <th>Zdjęcie</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for album in albums %}
+            <tr>
+                <td>{{ album.id }}</td>
+                <td>{{ album.name }}</td>
+                <td>{{ album.release_date }}</td>
+                <td>{{ album.artist_id }}</td>
+                <td>{{ album.description }}</td>
+                {% if album.photo %}
+                <td><img src="../static/images/{{ album.photo }}" height="50" width="50"></td>
+                {% else %}
+                <td>No Image</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
