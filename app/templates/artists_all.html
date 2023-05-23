@@ -21,12 +21,13 @@
                 <td>{{ artist.name }}</td>
                 <td>{{ artist.surname }}</td>
                 <td>{{ artist.nickname }}</td>
+                <td>{{ artist.localization }}</td>
+
                 {% if artist.photo %}
                 <td><img src="../static/images/{{ artist.photo }}" height="50" width="50"></td>
                 {% else %}
                 <td>No Image</td>
                 {% endif %}
-                <td>{{ artist.localization }}</td>
             </tr>
             {% endfor %}
             </tbody>
