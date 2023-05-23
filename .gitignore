@@ -18,6 +18,7 @@ build/
 docs/_build/
 .vscode
 app/static/images
+app/main/data.sqlite
 # Coverage reports
 htmlcov/
 .coverage

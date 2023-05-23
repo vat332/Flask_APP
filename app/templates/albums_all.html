@@ -7,26 +7,26 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Imię</th>
-                <th>Nazwisko</th>
-                <th>Ksywka</th>
-                <th>Pochodzenie</th>
+                <th>Nazwa płyty</th>
+                <th>Data wydania</th>
+                <th>Artysta</th>
+                <th>Opis</th>
                 <th>Zdjęcie</th>
             </tr>
             </thead>
             <tbody>
-            {% for artist in artists %}
+            {% for album in albums %}
             <tr>
-                <td>{{ artist.id }}</td>
-                <td>{{ artist.name }}</td>
-                <td>{{ artist.surname }}</td>
-                <td>{{ artist.nickname }}</td>
-                {% if artist.photo %}
-                <td><img src="../static/images/{{ artist.photo }}" height="50" width="50"></td>
+                <td>{{ album.id }}</td>
+                <td>{{ album.name }}</td>
+                <td>{{ album.release_date }}</td>
+                <td>{{ album.artist_id }}</td>
+                <td>{{ album.description }}</td>
+                {% if album.photo %}
+                <td><img src="../static/images/{{ album.photo }}" height="50" width="50"></td>
                 {% else %}
                 <td>No Image</td>
                 {% endif %}
-                <td>{{ artist.localization }}</td>
             </tr>
             {% endfor %}
             </tbody>

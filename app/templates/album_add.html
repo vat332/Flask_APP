@@ -6,11 +6,10 @@
 <div class="container">
     <div class="page-header">
         <h1>
-            To jest strona główna
+            To jest strona z dodawaniem albumów
         </h1>
-        <a href="{{ url_for('artists_all') }}" class="btn btn-primary">Lista Artystów</a>
-        <a href="{{ url_for('albums_all') }}" class="btn btn-success">Lista Albumów</a>
     </div>
+    {{ wtf.quick_form(form) }}
 </div>
 
 {% endblock %}
