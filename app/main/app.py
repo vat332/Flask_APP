@@ -150,6 +150,15 @@ def add_artist():
     return render_template('artist_add.html', form=form)
 
 
+@app.route('/artist/<int:id>', methods=['DELETE', 'GET'])
+def delete_artist(id):
+    artist = Artist.query.get_or_404(id)
+    db.session.delete(artist)
+    db.session.commit()
+    flash('Artysta został usunięty!', 'success')
+    return '', 204
+
+
 @app.route('/album_add', methods=['GET', 'POST'])
 def add_album():
     form = AlbumForm()
@@ -168,6 +177,15 @@ def add_album():
         else:
             flash('Oops coś poszło nie tak. Spróbuj ponownie!', 'danger')
     return render_template('album_add.html', form=form)
+
+
+@app.route('/albums/<int:id>', methods=['DELETE'])
+def delete_album(id):
+    album = Album.query.get_or_404(id)
+    db.session.delete(album)
+    db.session.commit()
+    flash('Album został usunięty!', 'success')
+    return '', 204
 
 
 @app.route('/about')
