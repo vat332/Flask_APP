@@ -179,7 +179,7 @@ def add_album():
     return render_template('album_add.html', form=form)
 
 
-@app.route('/albums/<int:id>', methods=['DELETE'])
+@app.route('/album/<int:id>', methods=['DELETE', 'GET'])
 def delete_album(id):
     album = Album.query.get_or_404(id)
     db.session.delete(album)
