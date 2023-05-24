@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileRequired, FileAllowed
 from enum import Enum
+from sqlalchemy import desc
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -34,11 +35,11 @@ class Artist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     surname = db.Column(db.String(100), nullable=False)
-    birth_date = db.Column(db.String(100), nullable=False)
+    birth_date = db.Column(db.Date, nullable=False)
     nickname = db.Column(db.String(100), nullable=False)
     localization = db.Column(db.String(100), nullable=False)
     photo = db.Column(db.String(100), nullable=True)
-    albums = db.relationship('Album', backref='artist', lazy=True)
+    albums = db.relationship('Album', backref='artist', lazy=True, cascade='all, delete')
 
     def __repr__(self):
         return '<Artysta %r "%r" %r >' % self.name, self.nickname, self.surname
@@ -84,7 +85,7 @@ class Album(db.Model):
     music_type = db.Column(db.String(50), nullable=True)
     views = db.Column(db.Integer, nullable=True)
     album_type = db.Column(db.String(50), nullable=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return '<Album %r>' % self.name
@@ -93,7 +94,7 @@ class Album(db.Model):
 class ArtistForm(FlaskForm):
     name = StringField('Imię', validators=[DataRequired()])
     surname = StringField('Nazwisko', validators=[DataRequired()])
-    birth_date = DateField('Data urodzenia (YYYY-MM-DD)', format="%Y-%m-%d", validators=[DataRequired()])
+    birth_date = DateField('Data urodzenia')
     nickname = StringField('Ksywka', validators=[DataRequired()])
     localization = SelectField('Lokalizacja', choices=[(genre.value, genre.value) for genre in City],
                                validators=[DataRequired()])
@@ -142,34 +143,44 @@ def add_artist():
             db.session.add(artist)
             db.session.commit()
             flash('Artysta został dodany!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('artists_all'))
         else:
             flash('Oops coś poszło nie tak. Spróbuj ponownie!', 'danger')
     return render_template('artist_add.html', form=form)
 
 
-@app.route('/album/<int:id>', methods=['GET', 'POST', 'PUT'])
-def edit_album(id):
-    album = Album.query.get_or_404(id)
-    form = AlbumForm(obj=album)
-    if form.validate_on_submit():
-        if form.artist_id.data is None:
-            flash('Podaj artyste')
-            return redirect(url_for('edit_album', id=id))
-        form.populate_obj(album)
-        db.session.commit()
-        flash('Artysta został z modyfikowany.')
-        return redirect(url_for('album_details', id=id))
-    return render_template('album_add.html', form=form, album=album)
+@app.route('/artists/<int:id>', methods=['GET', 'POST'])
+def update_artist(id):
+    artist = Artist.query.get_or_404(id)
+    form = ArtistForm(obj=artist)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(artist)
+            if form.photo.data:
+                filename = secure_filename(form.photo.data.filename)
+                form.photo.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                artist.photo = filename
+            db.session.commit()
+            flash('Artysta został z aktualizowany!', 'success')
+            return redirect(url_for('artists_all'))
+        else:
+            flash('Oops coś poszło nie tak, spróbuj ponownie', 'danger')
+    return render_template('artist_add.html', form=form)
 
 
-@app.route('/artist/<int:id>', methods=['DELETE', 'GET'])
+@app.route('/artist/<int:id>/delete', methods=['POST', 'DELETE', 'GET'])
 def delete_artist(id):
     artist = Artist.query.get_or_404(id)
     db.session.delete(artist)
     db.session.commit()
-    flash('Artysta został usunięty!', 'success')
-    return '', 204
+    flash('Album has been deleted!', 'success')
+    return redirect(url_for('artists_all'))
+
+
+@app.route('/artists_all')
+def artists_all():
+    artists = Artist.query.all()
+    return render_template('artists_all.html', artists=artists)
 
 
 @app.route('/album_add', methods=['GET', 'POST'])
@@ -187,19 +198,51 @@ def add_album():
             db.session.add(album)
             db.session.commit()
             flash('Album został dodany!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('albums_all'))
         else:
             flash('Oops coś poszło nie tak. Spróbuj ponownie!', 'danger')
     return render_template('album_add.html', form=form)
 
 
-@app.route('/album/<int:id>', methods=['DELETE', 'GET'])
+@app.route('/album/<int:id>', methods=['GET', 'POST'])
+def update_album(id):
+    album = Album.query.get_or_404(id)
+    form = AlbumForm(obj=album)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.populate_obj(album)
+            if form.photo.data:
+                filename = secure_filename(form.photo.data.filename)
+                form.photo.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                album.photo = filename
+            db.session.commit()
+            flash('Album został z aktualizowany!', 'success')
+            return redirect(url_for('albums_all'))
+        else:
+            flash('Oops coś poszło nie tak, spróbuj ponownie', 'danger')
+    return render_template('album_add.html', form=form)
+
+
+@app.route('/album/<int:id>/delete', methods=['POST', 'DELETE', 'GET'])
 def delete_album(id):
     album = Album.query.get_or_404(id)
     db.session.delete(album)
     db.session.commit()
-    flash('Album został usunięty!', 'success')
-    return '', 204
+    flash('Album has been deleted!', 'success')
+    return redirect(url_for('albums_all'))
+
+
+@app.route('/albums_all')
+def albums_all():
+    albums = Album.query.all()
+    artist = Artist.query.all()
+    return render_template('albums_all.html', albums=albums, artist=artist)
+
+
+@app.route('/albums_top', methods=['GET'])
+def top_albums():
+    top_albums = Album.query.order_by(desc(Album.views)).limit(10).all()
+    return render_template('albums_top.html', top_albums=top_albums)
 
 
 @app.route('/about')
@@ -210,19 +253,6 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
-
-
-@app.route('/artists_all')
-def artists_all():
-    artists = Artist.query.all()
-    return render_template('artists_all.html', artists=artists)
-
-
-@app.route('/albums_all')
-def albums_all():
-    albums = Album.query.all()
-    artist = Artist.query.all()
-    return render_template('albums_all.html', albums=albums, artist=artist)
 
 
 @app.errorhandler(404)
