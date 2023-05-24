@@ -2,46 +2,26 @@
 {% block title %}To-Do application{% endblock %}
 {% block page_content %}
 <div class="container">
-    <div class="page-header">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nazwa płyty</th>
-                <th>Data wydania</th>
-                <th>Liczba sprzedanych kopii</th>
-                <th>Nagrody</th>
-                <th>Gatunek muzyczny</th>
-                <th>Artysta</th>
-                <th>Opis</th>
-                <th>Zdjęcie</th>
-                <th>Akcje</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for album in top_albums %}
-            <tr>
-                <td>{{ album.id }}</td>
-                <td>{{ album.name }}</td>
-                <td>{{ album.release_date }}</td>
-                <td>{{ album.views }}</td>
-                <td>{{ album.album_type }}</td>
-                <td>{{ album.music_type }}</td>
-                <td>{{ album.artist.name }} "{{ album.artist.nickname }}" {{ album.artist.surname }}</td>
-                <td>{{ album.description }}</td>
-                {% if album.photo %}
-                <td><img src="../static/images/{{ album.photo }}" height="50" width="50"></td>
-                {% else %}
-                <td>No Image</td>
-                {% endif %}
-                <td><a href="{{ url_for('delete_album', id=album.id) }}" class="btn btn-primary"
-                       onclick="return confirm('Czy na pewno chcesz usunąć ten album')">Usuń
-                </a>
-                    <a href="{{ url_for('update_album', id=album.id) }}" class="btn btn-warning">Zmień</a></td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    {% for album in top_albums %}
+    <div class="m-3"><h1>Numer {{ loop.index }}.</h1></div>
+    <div class="card mb-3" style="max-width: 1260px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="../static/images/{{ album.photo }}" class="img-fluid rounded-start" alt="..." style="width: 100%;
+    height: 100%;object-fit: cover;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ album.name }} </br>{{ album.artist.name }} "{{ album.artist.nickname }}" {{
+                        album.artist.surname }}</h3>
+                    <h6 class="card-title">Liczba sprzedanych płyt: {{ album.views }} szt.</h6>
+                    <p class="card-text">{{ album.description }}</p>
+                    <p class="card-text"><small class="text-muted">{{ album.album_type }} {{ album.music_type
+                        }} </small></p>
+                </div>
+            </div>
+        </div>
     </div>
+    {% endfor %}
 </div>
 {% endblock %}
