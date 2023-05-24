@@ -9,6 +9,9 @@
                 <th>ID</th>
                 <th>Nazwa płyty</th>
                 <th>Data wydania</th>
+                <th>Liczba sprzedanych kopii</th>
+                <th>Nagrody</th>
+                <th>Gatunek muzyczny</th>
                 <th>Artysta</th>
                 <th>Opis</th>
                 <th>Zdjęcie</th>
@@ -21,7 +24,10 @@
                 <td>{{ album.id }}</td>
                 <td>{{ album.name }}</td>
                 <td>{{ album.release_date }}</td>
-                <td>{{ album.artist_id }}</td>
+                <td>{{ album.views }}</td>
+                <td>{{ album.album_type }}</td>
+                <td>{{ album.music_type }}</td>
+                <td>{{ album.artist.name }} "{{ album.artist.nickname }}" {{ album.artist.surname }}</td>
                 <td>{{ album.description }}</td>
                 {% if album.photo %}
                 <td><img src="../static/images/{{ album.photo }}" height="50" width="50"></td>
@@ -29,7 +35,8 @@
                 <td>No Image</td>
                 {% endif %}
                 <td><a href="{{ url_for('delete_album', id=album.id) }}" class="btn btn-primary"
-                       onclick="return confirm('Czy na pewno chcesz usunąć ten album')">Usuń</a></td>
+                       onclick="return confirm('Czy na pewno chcesz usunąć ten album')">Usuń</a>
+                    <a href="{{ url_for('edit_album', id=album.id) }}" class="btn btn-warning">Zmień</a></td>
             </tr>
             {% endfor %}
             </tbody>
