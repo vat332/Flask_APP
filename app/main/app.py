@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileRequired, FileAllowed
 from enum import Enum
+from sqlalchemy import desc
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -236,6 +237,12 @@ def albums_all():
     albums = Album.query.all()
     artist = Artist.query.all()
     return render_template('albums_all.html', albums=albums, artist=artist)
+
+
+@app.route('/albums_top', methods=['GET'])
+def top_albums():
+    top_albums = Album.query.order_by(desc(Album.views)).limit(10).all()
+    return render_template('albums_top.html', top_albums=top_albums)
 
 
 @app.route('/about')
