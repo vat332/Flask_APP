@@ -4,7 +4,8 @@ Aplikacja na zajęcia systemy rozproszone pokazująca działanie biblioteki Flas
 
 ## Wprowadzenie
 
-To jest aplikacja internetowa napisana w języku Python z wykorzystaniem frameworka Flask i biblioteki Bootstrap. Aplikacja wykonuje (opis funkcjonalności aplikacji).
+To jest aplikacja internetowa napisana w języku Python z wykorzystaniem frameworka Flask i biblioteki Bootstrap.
+Aplikacja wykonuje (opis funkcjonalności aplikacji).
 
 ## Wymagania
 
@@ -33,6 +34,13 @@ Przed uruchomieniem aplikacji, musisz mieć zainstalowane następujące elementy
         python app.py
     ```
 6. Otwórz przeglądarkę i przejdź do http://localhost:5000.
+7. Przeprowadź migracje bazy danych
+   ```bash
+   flask shell
+   from app import db
+   db.create_all()
+   quit()
+   ```
 
 ## Struktura projektu
 

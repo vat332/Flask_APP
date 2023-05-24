@@ -12,6 +12,7 @@
                 <th>Ksywka</th>
                 <th>Pochodzenie</th>
                 <th>Zdjęcie</th>
+                <th>Akcje</th>
             </tr>
             </thead>
             <tbody>
@@ -21,12 +22,18 @@
                 <td>{{ artist.name }}</td>
                 <td>{{ artist.surname }}</td>
                 <td>{{ artist.nickname }}</td>
+                <td>{{ artist.localization }}</td>
+
                 {% if artist.photo %}
                 <td><img src="../static/images/{{ artist.photo }}" height="50" width="50"></td>
                 {% else %}
                 <td>No Image</td>
                 {% endif %}
-                <td>{{ artist.localization }}</td>
+                <td><a href="{{ url_for('delete_artist', id=artist.id) }}" class="btn btn-primary"
+                       onclick="return confirm('Czy na pewno chcesz usunąć tego artyste')">Usuń
+                </a>
+                </td>
+
             </tr>
             {% endfor %}
             </tbody>
