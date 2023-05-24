@@ -1,32 +1,63 @@
 {% block footer %}
-<div class="footer">
-    <footer class="bg-light text-center text-lg-start">
-        <div class="container p-4">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Footer text</h5>
+<footer class="text-center text-lg-start bg-white text-muted">
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+      <div class="me-5 d-none d-lg-block">
+      </div>
+    </section>
+    <section class="">
+      <div class="container text-center text-md-start mt-5">
+        <div class="row mt-3">
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+            <h6 class="text-uppercase fw-bold mb-4">
+              <i class="fas fa-gem me-3 text-secondary"></i>OLiS
+            </h6>
+            <p>
+              Najlepsza muzyka w Polsce!
+            </p>
+          </div>
 
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste atque ea quis
-                        molestias. Fugiat pariatur maxime quis culpa corporis vitae repudiandae
-                        aliquam voluptatem veniam, est atque cumque eum delectus sint!
-                    </p>
-                </div>
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Footer text</h5>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste atque ea quis
-                        molestias. Fugiat pariatur maxime quis culpa corporis vitae repudiandae
-                        aliquam voluptatem veniam, est atque cumque eum delectus sint!
-                    </p>
-                </div>
-            </div>
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+            <h6 class="text-uppercase fw-bold mb-4">
+              Products
+            </h6>
+            <p>
+              <a href="https://flask.palletsprojects.com/en/2.3.x/" class="text-reset">Flask</a>
+            </p>
+            <p>
+              <a href="https://www.sqlite.org/index.html" class="text-reset">Sqlite</a>
+            </p>
+            <p>
+              <a href="https://getbootstrap.com/" class="text-reset">Bootstrap</a>
+            </p>
+          </div>
+          <!-- Grid column -->
+  
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Useful links
+            </h6>
+            <p>
+              <a href="{{ url_for('top_albums') }}" class="text-reset">Top albumy</a>
+            </p>
+            <p>
+              <a href="/" class="text-reset">Strona główna</a>
+            </p>
+            <p>
+              <a href="{{ url_for('contact') }}" class="text-reset">Kontakt</a>
+            </p>
+            <p>
+              <a href="{{ url_for('about') }}" class="text-reset">O nas</a>
+            </p>
+          </div>
         </div>
-
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023
-            <a class="text-dark" href="/">To-DoList.com</a>
-        </div>
-    </footer>
-</div>
+      </div>
+    </section>
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
+      © 2023 Copyright:
+      <a class="text-reset fw-bold">Systemy Rozproszone WMII</a>
+    </div>
+  </footer>
+  
 {% endblock %}

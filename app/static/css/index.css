@@ -1,0 +1,12 @@
+.my-button-artist {
+  background-color: #4CAF50;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}

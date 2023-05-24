@@ -100,7 +100,7 @@ class ArtistForm(FlaskForm):
                                validators=[DataRequired()])
     photo = FileField('Zdjęcie',
                       validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png', "'gif"], 'Tylko obrazki!')])
-    submit = SubmitField('Dodaj')
+    submit = SubmitField('Dodaj', render_kw={'class': 'my-button-artist'})
 
 
 class AlbumForm(FlaskForm):

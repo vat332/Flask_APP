@@ -1,15 +1,17 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% block title %}To-Do application{% endblock %}
 {% block page_content %}
-<div class="container">
-    <div class="page-header">
-        <h1>
-            To jest strona główna
+<div class="container" style="width: 55%">
+        <h1 style="text-align: center;">
+            Najpopularniejsza muzyka w Polsce
         </h1>
+    <h1 class="mt-5">
+    Ale co to jest OLis?
+</h1>
+<p class="mt-5 mb-5">
+    <b>OLiS</b> to skrót od <b>"Oficjalna Lista Sprzedaży"</b> i odnosi się do oficjalnego polskiego zestawienia najpopularniejszych albumów muzycznych, singli i teledysków. Jest to lista opracowywana przez Związek Producentów Audio-Video (ZPAV) w oparciu o sprzedaż fizyczną i cyfrową oraz odtworzenia w serwisach streamingowych. OLiS publikuje cotygodniowe rankingi, które prezentują najchętniej kupowane i odsłuchiwane utwory w Polsce. Lista ta stanowi odzwierciedlenie popularności muzyki na rynku polskim i jest ważnym wskaźnikiem sukcesu artystów i wydawnictw muzycznych.
+</p>
         <a href="{{ url_for('artists_all') }}" class="btn btn-primary">Lista Artystów</a>
         <a href="{{ url_for('albums_all') }}" class="btn btn-success">Lista Albumów</a>
-    </div>
 </div>
 
 {% endblock %}
